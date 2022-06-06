@@ -1,0 +1,5 @@
+rootProject.name = "Quote Project"
+include 'QuoteService',
+        'RegisterUserConsolePollConsumer',
+        'RegisterUserConsolePullConsumer',
+        'ApiClient'

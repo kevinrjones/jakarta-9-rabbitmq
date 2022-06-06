@@ -1,0 +1,11 @@
+rootProject.name = "Quote Project"
+include 'QuoteService',
+        'RegisterUserConsolePollConsumer',
+        'RegisterUserConsolePullConsumer',
+        'RegisterUserConsoleRoutingKeyConsumer',
+        'RpcConsoleConsumer',
+        'FanOutPubSubConsumer',
+        'TopicConsoleConsumer',
+        'HeadersConsoleConsumer',
+        'DlxConsumer',
+        'ApiClient'

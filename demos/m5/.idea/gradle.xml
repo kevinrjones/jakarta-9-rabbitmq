@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ApiClient" />
+            <option value="$PROJECT_DIR$/QuoteService" />
+            <option value="$PROJECT_DIR$/RegisterUserConsolePollConsumer" />
+            <option value="$PROJECT_DIR$/RegisterUserConsolePullConsumer" />
+            <option value="$PROJECT_DIR$/RegisterUserConsoleRoutingKeyConsumer" />
+            <option value="$PROJECT_DIR$/RpcConsoleConsumer" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

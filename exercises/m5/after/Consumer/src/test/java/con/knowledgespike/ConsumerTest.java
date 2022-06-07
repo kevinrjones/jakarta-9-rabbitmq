@@ -80,7 +80,8 @@ public class ConsumerTest {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         assertThat(channelInstanceMethod)
                 .withFailMessage("==> Have you created a `createChannel` method in the `Consumer` class.")
@@ -119,22 +120,27 @@ public class ConsumerTest {
 
         var name = (String) nameField.get(null);
         assertThat(name)
-                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` feld with the value `direct` in the `Consumer` class.")
-                .isEqualTo("direct");
+                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` feld with the value `rpc` in the `Consumer` class.")
+                .isEqualTo("rpc");
 
         Method channelInstanceMethod = null;
         try {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         Method queueInstanceMethod = null;
         try {
             queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
             queueInstanceMethod.setAccessible(true);
             queueInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+            assertThat(e)
+                    .withFailMessage("==> Unable to declare a queue")
+                    .isNull();
+        }
 
         assertThat(queueInstanceMethod)
                 .withFailMessage("==> Have you created a `declareQueue` method in the `Consumer` class.")
@@ -159,24 +165,11 @@ public class ConsumerTest {
                 .withFailMessage("==> Have you created a `deliverCallbackField` field in the `Consumer` class.")
                 .isNotNull();
 
-        Method channelInstanceMethod = null;
-        try {
-            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
-            channelInstanceMethod.setAccessible(true);
-            channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
-
-        Method queueInstanceMethod = null;
-        try {
-            queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
-            queueInstanceMethod.setAccessible(true);
-            queueInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
-
         Method consumeMessageInstanceMethod = null;
         try {
             consumeMessageInstanceMethod = Consumer.class.getDeclaredMethod("consumeMessage");
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         assertThat(consumeMessageInstanceMethod)
                 .withFailMessage("==> Have you created a `consumeMessage` method in the `Consumer` class.")
@@ -184,4 +177,18 @@ public class ConsumerTest {
 
     }
 
+    @Test
+    public void testSendResponseMessageCreated() {
+
+        Method sendResponseMessageInstanceMethod = null;
+        try {
+            sendResponseMessageInstanceMethod = Consumer.class.getDeclaredMethod("sendResponseMessage", String.class, String.class, long.class);
+        } catch (Throwable e) {
+        }
+
+        assertThat(sendResponseMessageInstanceMethod)
+                .withFailMessage("==> Have you created a `sendResponseMessage` method in the `Consumer` class.")
+                .isNotNull();
+
+    }
 }

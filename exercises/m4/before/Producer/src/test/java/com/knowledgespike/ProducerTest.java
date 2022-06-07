@@ -45,7 +45,7 @@ public class ProducerTest {
 
         Connection connection = (Connection) connectionField.get(producer);
 
-        assertThat(connectionField)
+        assertThat(connection)
                 .withFailMessage("==> Have you created a connection in the `Producer` class.")
                 .isNotNull();
 

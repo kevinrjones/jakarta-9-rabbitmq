@@ -1,4 +1,4 @@
-package con.knowledgespike;
+package com.knowledgespike;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -80,7 +80,8 @@ public class ConsumerTest {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         assertThat(channelInstanceMethod)
                 .withFailMessage("==> Have you created a `createChannel` method in the `Consumer` class.")
@@ -127,14 +128,19 @@ public class ConsumerTest {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         Method queueInstanceMethod = null;
         try {
             queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
             queueInstanceMethod.setAccessible(true);
             queueInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+            assertThat(e)
+                    .withFailMessage("==> Unable to declare a queue")
+                    .isNull();
+        }
 
         assertThat(queueInstanceMethod)
                 .withFailMessage("==> Have you created a `declareQueue` method in the `Consumer` class.")
@@ -159,24 +165,11 @@ public class ConsumerTest {
                 .withFailMessage("==> Have you created a `deliverCallbackField` field in the `Consumer` class.")
                 .isNotNull();
 
-        Method channelInstanceMethod = null;
-        try {
-            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
-            channelInstanceMethod.setAccessible(true);
-            channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
-
-        Method queueInstanceMethod = null;
-        try {
-            queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
-            queueInstanceMethod.setAccessible(true);
-            queueInstanceMethod.invoke(consumer);
-        } catch (Throwable e) { }
-
         Method consumeMessageInstanceMethod = null;
         try {
             consumeMessageInstanceMethod = Consumer.class.getDeclaredMethod("consumeMessage");
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
 
         assertThat(consumeMessageInstanceMethod)
                 .withFailMessage("==> Have you created a `consumeMessage` method in the `Consumer` class.")

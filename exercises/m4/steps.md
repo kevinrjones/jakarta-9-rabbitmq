@@ -36,4 +36,22 @@
 1. In this method call `channel.basicConsume` passing in the `DeliverCallback` you just declared
 
 ### Bringing it all Together
-1. If you now run the producer and the consumer in different terminal windows then the producer should send a message to RabbitMQ and the consumer should consume that message and display it on the console
+1. If you now run the producer and the consumer in different terminal windows then the producer should send a message to RabbitMQ and the consumer should consume that message and display it on the console, to do this
+1. Change directories to `before` and run `gradle build`
+    > all the tests should pass
+1. In this terminal run `gradle Producer:run`
+1. Create a new terminal window, in this terminal:
+    1. change directory to `before`
+    1. type `gradle Consumer:run`
+1. You should see the message you printed out when the consumer consumes a message
+
+
+
+
+
+
+
+
+
+
+Open the **Custom Test** section and take a look at the **Test Output** section for more details.

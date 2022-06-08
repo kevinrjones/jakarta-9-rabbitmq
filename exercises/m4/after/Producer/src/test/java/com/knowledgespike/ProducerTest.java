@@ -45,7 +45,7 @@ public class ProducerTest {
 
         Connection connection = (Connection) connectionField.get(producer);
 
-        assertThat(connection)
+        assertThat(connectionField)
                 .withFailMessage("==> Have you created a connection in the `Producer` class.")
                 .isNotNull();
 
@@ -105,14 +105,14 @@ public class ProducerTest {
         }
 
         assertThat(nameField)
-                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` field in the `Consumer` class.")
+                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` field in the `Producer` class.")
                 .isNotNull();
 
         nameField.setAccessible(true);
 
         var name = (String) nameField.get(null);
         assertThat(name)
-                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` feld with the value `direct` in the `Consumer` class.")
+                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` feld with the value `direct` in the `Producer` class.")
                 .isEqualTo("direct");
         nameField.setAccessible(true);
 

@@ -166,7 +166,7 @@ public class ProducerTest {
 
         try {
             publishMessageInstanceMethod.setAccessible(true);
-            publishMessageInstanceMethod.invoke(producer, "Message", "direct-route");
+            publishMessageInstanceMethod.invoke(producer, "Message", "some-topic");
         } catch (Throwable e) {
             assertThat(e)
                     .withFailMessage("==> Unable to publish a message")

@@ -12,8 +12,6 @@ import java.util.concurrent.TimeoutException;
 public class Producer {
 
     private final static String EXCHANGE_NAME = "topic-exchange";
-    private final static String ROUTING_KEY = "first.topic";
-    private final static String ANOTHER_ROUTING_KEY = "second.topic";
 
     private final Connection connection;
     private Channel channel;
@@ -48,8 +46,8 @@ public class Producer {
 
         producer.createChannel();
         producer.declareExchange();
-        producer.publishMessage("Simple message to '" + ROUTING_KEY + "'", ROUTING_KEY);
-        producer.publishMessage("Simple message to'" + ANOTHER_ROUTING_KEY + "'", ANOTHER_ROUTING_KEY);
+        producer.publishMessage("Simple message to 'first.topic'", "first.topic");
+        producer.publishMessage("Simple message to 'second.topic'", "second.topic");
         producer.closeConnection();
     }
 

@@ -1,4 +1,4 @@
-package con.knowledgespike;
+package com.knowledgespike;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -16,7 +16,6 @@ import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConsumerTest {
 
@@ -49,8 +48,8 @@ public class ConsumerTest {
 
         Connection connection = (Connection) connectionField.get(consumer);
 
-        assertThat(connectionField)
-                .withFailMessage("==> Have you created a connection in the `Consumer` class.")
+        assertThat(connection)
+                .withFailMessage("==> Have you set the connection field in the `Consumer` class.")
                 .isNotNull();
     }
 
@@ -80,8 +79,7 @@ public class ConsumerTest {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
-        } catch (Throwable e) {
-        }
+        } catch (Throwable e) { }
 
         assertThat(channelInstanceMethod)
                 .withFailMessage("==> Have you created a `createChannel` method in the `Consumer` class.")
@@ -96,13 +94,8 @@ public class ConsumerTest {
     }
 
     @Test
-    public void testQueueCreation() throws IllegalAccessException {
-
+    public void testDeclareExchange() throws IllegalAccessException {
         Field[] fields = Consumer.class.getDeclaredFields();
-        Assertions.assertThat(fields.length)
-                .withFailMessage("==> Have you created a `QUEUE_NAME` field in the `Consumer` class.")
-                .isGreaterThan(1);
-
 
         Field nameField = null;
         for (var field : fields) {
@@ -113,39 +106,133 @@ public class ConsumerTest {
         }
 
         assertThat(nameField)
-                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` field in the `Consumer` class.")
+                .withFailMessage("==> Have you created a `private final static String EXCHANGE_NAME` field in the `Consumer` class.")
                 .isNotNull();
 
         nameField.setAccessible(true);
 
         var name = (String) nameField.get(null);
         assertThat(name)
-                .withFailMessage("==> Have you created a `private final static String QUEUE_NAME` feld with the value `rpc` in the `Consumer` class.")
-                .isEqualTo("rpc");
+                .withFailMessage("==> Have you created a `private final static String EXCHANGE_NAME` field with the value `topic-exchange` in the `Consumer` class.")
+                .isEqualTo("topic-exchange");
+        nameField.setAccessible(true);
+
+        Method declareExchangeInstanceMethod = null;
+        try {
+            declareExchangeInstanceMethod = Consumer.class.getDeclaredMethod("declareExchange");
+        } catch (Throwable e) {
+        }
+        assertThat(declareExchangeInstanceMethod)
+                .withFailMessage("==> Have you created a `declareExchange` method in the `Consumer` class.")
+                .isNotNull();
 
         Method channelInstanceMethod = null;
         try {
             channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
             channelInstanceMethod.setAccessible(true);
             channelInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+
+        try {
+            declareExchangeInstanceMethod.setAccessible(true);
+            declareExchangeInstanceMethod.invoke(consumer);
         } catch (Throwable e) {
+            assertThat(e)
+                    .withFailMessage("==> Unable to declare the exchange")
+                    .isNull();
         }
+
+    }
+    
+    @Test
+    public void testQueueCreation() throws IllegalAccessException {
+
+        Method exchangeInstanceMethod = null;
+        try {
+            exchangeInstanceMethod = Consumer.class.getDeclaredMethod("declareExchange");
+            exchangeInstanceMethod.setAccessible(true);
+            exchangeInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method channelInstanceMethod = null;
+        try {
+            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
+            channelInstanceMethod.setAccessible(true);
+            channelInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
 
         Method queueInstanceMethod = null;
         try {
             queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
             queueInstanceMethod.setAccessible(true);
             queueInstanceMethod.invoke(consumer);
-        } catch (Throwable e) {
-            assertThat(e)
-                    .withFailMessage("==> Unable to declare a queue")
-                    .isNull();
-        }
+        } catch (Throwable e) { }
 
         assertThat(queueInstanceMethod)
                 .withFailMessage("==> Have you created a `declareQueue` method in the `Consumer` class.")
                 .isNotNull();
 
+        Field[] fields = Consumer.class.getDeclaredFields();
+
+        Field queueNameField = null;
+        for (var field : fields) {
+            if (field.getType() == String.class && field.getName().equals("queueName")) {
+                queueNameField = field;
+                break;
+            }
+        }
+        queueNameField.setAccessible(true);
+
+        assertThat(queueNameField)
+                .withFailMessage("==> Have you created a `private String queueName` field in the `Consumer` class.")
+                .isNotNull();
+
+        String queueName = (String) queueNameField.get(consumer);
+
+        assertThat(queueName)
+                .withFailMessage("==> Have you set the queueName field in the `Consumer` class.")
+                .isNotNull();
+    }
+
+    @Test
+    public void testBindQueue() throws IllegalAccessException {
+
+        Method exchangeInstanceMethod = null;
+        try {
+            exchangeInstanceMethod = Consumer.class.getDeclaredMethod("declareExchange");
+            exchangeInstanceMethod.setAccessible(true);
+            exchangeInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method channelInstanceMethod = null;
+        try {
+            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
+            channelInstanceMethod.setAccessible(true);
+            channelInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method queueInstanceMethod = null;
+        try {
+            queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
+            queueInstanceMethod.setAccessible(true);
+            queueInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method bindQueueInstanceMethod = null;
+        try {
+            bindQueueInstanceMethod = Consumer.class.getDeclaredMethod("bindQueue", String.class);
+            bindQueueInstanceMethod.setAccessible(true);
+            bindQueueInstanceMethod.invoke(consumer, "routingKey");
+        } catch (Throwable e) {
+            assertThat(e)
+                    .withFailMessage("==> Unable to bind the queue.")
+                    .isNull();
+        }
+
+        assertThat(bindQueueInstanceMethod)
+                .withFailMessage("==> Have you created a `bindQueue` method in the `Consumer` class.")
+                .isNotNull();
     }
 
     @Test
@@ -165,11 +252,24 @@ public class ConsumerTest {
                 .withFailMessage("==> Have you created a `deliverCallbackField` field in the `Consumer` class.")
                 .isNotNull();
 
+        Method channelInstanceMethod = null;
+        try {
+            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
+            channelInstanceMethod.setAccessible(true);
+            channelInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method queueInstanceMethod = null;
+        try {
+            queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
+            queueInstanceMethod.setAccessible(true);
+            queueInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
         Method consumeMessageInstanceMethod = null;
         try {
             consumeMessageInstanceMethod = Consumer.class.getDeclaredMethod("consumeMessage");
-        } catch (Throwable e) {
-        }
+        } catch (Throwable e) { }
 
         assertThat(consumeMessageInstanceMethod)
                 .withFailMessage("==> Have you created a `consumeMessage` method in the `Consumer` class.")
@@ -177,18 +277,4 @@ public class ConsumerTest {
 
     }
 
-    @Test
-    public void testSendResponseMessageCreated() {
-
-        Method sendResponseMessageInstanceMethod = null;
-        try {
-            sendResponseMessageInstanceMethod = Consumer.class.getDeclaredMethod("sendResponseMessage", String.class, String.class, long.class);
-        } catch (Throwable e) {
-        }
-
-        assertThat(sendResponseMessageInstanceMethod)
-                .withFailMessage("==> Have you created a `sendResponseMessage` method in the `Consumer` class.")
-                .isNotNull();
-
-    }
 }

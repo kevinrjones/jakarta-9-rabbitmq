@@ -1,4 +1,4 @@
-package con.knowledgespike;
+package com.knowledgespike;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -114,8 +113,8 @@ public class ConsumerTest {
 
         var name = (String) nameField.get(null);
         assertThat(name)
-                .withFailMessage("==> Have you created a `private final static String EXCHANGE_NAME` field with the value `headers-exchange` in the `Consumer` class.")
-                .isEqualTo("headers-exchange");
+                .withFailMessage("==> Have you created a `private final static String EXCHANGE_NAME` field with the value `direct-exchange` in the `Consumer` class.")
+                .isEqualTo("direct-exchange");
         nameField.setAccessible(true);
 
         Method declareExchangeInstanceMethod = null;
@@ -145,44 +144,7 @@ public class ConsumerTest {
         }
 
     }
-
-    @Test
-    public void testCreateHeaders() throws IllegalAccessException {
-        Method createHeadersInstanceMethod = null;
-        try {
-            createHeadersInstanceMethod = Consumer.class.getDeclaredMethod("createMessageHeaders");
-            createHeadersInstanceMethod.setAccessible(true);
-            createHeadersInstanceMethod.invoke(consumer);
-        } catch (Throwable e) {
-        }
-
-        Field[] fields = Consumer.class.getDeclaredFields();
-
-        Field headersField = null;
-        for (var field : fields) {
-            if (field.getType() == HashMap.class) {
-                headersField = field;
-                break;
-            }
-        }
-
-        assertThat(headersField)
-                .withFailMessage("==> Have you created a `headers` field in the `Consumer` class.")
-                .isNotNull();
-
-        headersField.setAccessible(true);
-        var headers = (HashMap<String, Object>) headersField.get(consumer);
-
-        assertThat(headers)
-                .withFailMessage("==> Have you set the `headers` field in the `createMessageHeaders` method.")
-                .isNotNull();
-
-        assertThat(headers.size())
-                .withFailMessage("==> Have you set the values in the `headers` field in the `createMessageHeaders` method.")
-                .isEqualTo(3);
-
-
-    }
+    
     @Test
     public void testQueueCreation() throws IllegalAccessException {
 
@@ -211,6 +173,26 @@ public class ConsumerTest {
                 .withFailMessage("==> Have you created a `declareQueue` method in the `Consumer` class.")
                 .isNotNull();
 
+        Field[] fields = Consumer.class.getDeclaredFields();
+
+        Field queueNameField = null;
+        for (var field : fields) {
+            if (field.getType() == String.class && field.getName().equals("queueName")) {
+                queueNameField = field;
+                break;
+            }
+        }
+        queueNameField.setAccessible(true);
+
+        assertThat(queueNameField)
+                .withFailMessage("==> Have you created a `private String queueName` field in the `Consumer` class.")
+                .isNotNull();
+
+        String queueName = (String) queueNameField.get(consumer);
+
+        assertThat(queueName)
+                .withFailMessage("==> Have you set the queueName field in the `Consumer` class.")
+                .isNotNull();
     }
 
     @Test
@@ -239,9 +221,9 @@ public class ConsumerTest {
 
         Method bindQueueInstanceMethod = null;
         try {
-            bindQueueInstanceMethod = Consumer.class.getDeclaredMethod("bindQueue");
+            bindQueueInstanceMethod = Consumer.class.getDeclaredMethod("bindQueue", String.class);
             bindQueueInstanceMethod.setAccessible(true);
-            bindQueueInstanceMethod.invoke(consumer);
+            bindQueueInstanceMethod.invoke(consumer, "routingKey");
         } catch (Throwable e) {
             assertThat(e)
                     .withFailMessage("==> Unable to bind the queue.")

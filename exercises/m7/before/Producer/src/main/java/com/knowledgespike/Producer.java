@@ -21,8 +21,8 @@ public class Producer {
 //
 //        producer.createChannel();
 //        producer.declareExchange();
-//        producer.publishMessage("Simple message", ROUTING_KEY);
-//        producer.publishMessage("Simple message", ANOTHER_ROUTING_KEY);
+//        producer.publishMessage("Simple message - direct-route", "direct-route");
+//        producer.publishMessage("Simple message - another-direct-route" , "another-direct-route");
 //        producer.closeConnection();
     }
 

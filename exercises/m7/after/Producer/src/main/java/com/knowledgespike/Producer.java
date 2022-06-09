@@ -12,8 +12,6 @@ import java.util.concurrent.TimeoutException;
 public class Producer {
 
     private final static String EXCHANGE_NAME = "direct-exchange";
-    private final static String ROUTING_KEY = "direct-route";
-    private final static String ANOTHER_ROUTING_KEY = "another-direct-route";
 
     private final Connection connection;
     private Channel channel;
@@ -29,7 +27,7 @@ public class Producer {
     }
 
     private void declareExchange() throws IOException {
-        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
     }
 
     private void closeConnection() throws IOException {
@@ -48,8 +46,8 @@ public class Producer {
 
         producer.createChannel();
         producer.declareExchange();
-        producer.publishMessage("Simple message", ROUTING_KEY);
-        producer.publishMessage("Simple message", ANOTHER_ROUTING_KEY);
+        producer.publishMessage("Simple message - direct-route", "direct-route");
+        producer.publishMessage("Simple message - another-direct-route" , "another-direct-route");
         producer.closeConnection();
     }
 

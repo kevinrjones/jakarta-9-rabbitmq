@@ -31,7 +31,7 @@ public class Consumer {
     }
 
     private void declareExchange() throws IOException {
-        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
     }
 
     private void declareQueue() throws IOException {
@@ -49,10 +49,7 @@ public class Consumer {
     DeliverCallback deliverCallback = (String consumerTag, Delivery delivery) -> {
         message = new String(delivery.getBody(), StandardCharsets.UTF_8);
 
-        System.out.println(" [x] Fanout message: " + message);
-
-        // optional
-        connection.close();
+        System.out.println(" [x] Routed message: " + message);
     };
 
 

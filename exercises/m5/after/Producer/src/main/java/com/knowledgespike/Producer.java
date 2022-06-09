@@ -58,7 +58,7 @@ public class Producer {
         channel.basicConsume(replyTo, true, ((consumerTag, message) -> {
             if (message.getProperties().getCorrelationId().equals(correlationId)) {
                 var received = new String(message.getBody(), StandardCharsets.UTF_8);
-                System.out.println(" [x] Received a response");
+                System.out.println(" [x] Received a response '" + received + "'");
                 connection.close();
             }
         }), consumerTag -> {

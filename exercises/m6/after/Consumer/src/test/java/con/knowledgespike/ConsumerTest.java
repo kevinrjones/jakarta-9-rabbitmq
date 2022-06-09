@@ -155,8 +155,6 @@ public class ConsumerTest {
                 .isNotNull();
 
 
-
-
         Field[] fields = Consumer.class.getDeclaredFields();
 
         Field queueNameField = null;
@@ -182,7 +180,53 @@ public class ConsumerTest {
     }
 
     @Test
-    public void testBasicConsumeCreated() {
+    public void testBindQueue() throws IllegalAccessException {
+
+        Method exchangeInstanceMethod = null;
+        try {
+            exchangeInstanceMethod = Consumer.class.getDeclaredMethod("declareExchange");
+            exchangeInstanceMethod.setAccessible(true);
+            exchangeInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method channelInstanceMethod = null;
+        try {
+            channelInstanceMethod = Consumer.class.getDeclaredMethod("createChannel");
+            channelInstanceMethod.setAccessible(true);
+            channelInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method queueInstanceMethod = null;
+        try {
+            queueInstanceMethod = Consumer.class.getDeclaredMethod("declareQueue");
+            queueInstanceMethod.setAccessible(true);
+            queueInstanceMethod.invoke(consumer);
+        } catch (Throwable e) { }
+
+        Method bindQueueInstanceMethod = null;
+        try {
+            bindQueueInstanceMethod = Consumer.class.getDeclaredMethod("bindQueue");
+        } catch (Throwable e) {
+        }
+
+        assertThat(bindQueueInstanceMethod)
+                .withFailMessage("==> Have you created a `bindQueue` method in the `Consumer` class.")
+                .isNotNull();
+
+        try {
+            bindQueueInstanceMethod = Consumer.class.getDeclaredMethod("bindQueue");
+            bindQueueInstanceMethod.setAccessible(true);
+            bindQueueInstanceMethod.invoke(consumer);
+        } catch (Throwable e) {
+            assertThat(e)
+                    .withFailMessage("==> Unable to bind the queue")
+                    .isNull();
+        }
+
+    }
+
+    @Test
+    public void testConsumeMessageCreated() {
 
         Field[] fields = Consumer.class.getDeclaredFields();
 

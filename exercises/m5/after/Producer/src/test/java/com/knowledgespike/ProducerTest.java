@@ -149,6 +149,7 @@ public class ProducerTest {
     @Test
     public void testTemporaryQueueCreation() throws IllegalAccessException {
 
+        // Does the 'replyTo' field exist?
         Field[] fields = Producer.class.getDeclaredFields();
         Field replyToField = null;
         for (var field : fields) {
@@ -158,6 +159,11 @@ public class ProducerTest {
             }
         }
 
+        assertThat(replyToField)
+                .withFailMessage("==> Have you created a `private replyToField` field in the `Producer` class.")
+                .isNotNull();
+
+        // Call 'createChannel' to get the channel for later in the test
         Method channelInstanceMethod = null;
         try {
             channelInstanceMethod = Producer.class.getDeclaredMethod("createChannel");
@@ -166,6 +172,7 @@ public class ProducerTest {
         } catch (Throwable e) {
         }
 
+        // does the 'createTemporaryQueue' method exist
         Method temporaryQueueInstanceMethod = null;
         try {
             temporaryQueueInstanceMethod = Producer.class.getDeclaredMethod("createTemporaryQueue");
@@ -192,6 +199,7 @@ public class ProducerTest {
     @Test
     public void testCorrelationIdCreation() throws IllegalAccessException {
 
+        // Check that the correlationId field exists
         Field[] fields = Producer.class.getDeclaredFields();
         Field correlationIdField = null;
         for (var field : fields) {
@@ -201,6 +209,11 @@ public class ProducerTest {
             }
         }
 
+        assertThat(correlationIdField)
+                .withFailMessage("==> Have you created a `private correlationId` field in the `Producer` class.")
+                .isNotNull();
+
+        // Check tha the 'createCorrelationId' method exists and call it
         Method createCorrelationIdInstanceMethod = null;
         try {
             createCorrelationIdInstanceMethod = Producer.class.getDeclaredMethod("createCorrelationId");
@@ -216,6 +229,7 @@ public class ProducerTest {
                 .withFailMessage("==> Have you created a `createCorrelationId` method in the `Producer` class.")
                 .isNotNull();
 
+        // Check that the 'correlationId' field has been set
         correlationIdField.setAccessible(true);
         var name = (String) correlationIdField.get(producer);
         assertThat(name)
@@ -227,6 +241,7 @@ public class ProducerTest {
     @Test
     public void testPropertiesCreation() throws IllegalAccessException {
 
+        // check that the 'properties' field exists
         Field[] fields = Producer.class.getDeclaredFields();
         Field propertiesField = null;
         for (var field : fields) {
@@ -236,6 +251,12 @@ public class ProducerTest {
             }
         }
 
+        assertThat(propertiesField)
+                .withFailMessage("==> Have you created a `private properties` field in the `Producer` class.")
+                .isNotNull();
+
+
+        // check that the 'buildProperties' method exists and call it
         Method buildPropertiesInstanceMethod = null;
         try {
             buildPropertiesInstanceMethod = Producer.class.getDeclaredMethod("buildProperties");
@@ -251,10 +272,12 @@ public class ProducerTest {
                 .withFailMessage("==> Have you created the `buildProperties` method in the `Producer` class.")
                 .isNotNull();
 
+
+        // check that the properties field is set
         propertiesField.setAccessible(true);
         var name = (AMQP.BasicProperties) propertiesField.get(producer);
         assertThat(name)
-                .withFailMessage("==> Have you created a `correlationId` field and set its value in the createCorrelationId method")
+                .withFailMessage("==> Have you created a `properties` field and set its value in the buildProperties method")
                 .isNotNull();
 
     }

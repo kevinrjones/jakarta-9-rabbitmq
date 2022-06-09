@@ -8,8 +8,6 @@ import java.util.concurrent.TimeoutException;
 
 public class Consumer {
     private final static String EXCHANGE_NAME = "topic-exchange";
-    private final static String ROUTING_KEY = "first.topic";
-    private final static String ANOTHER_ROUTING_KEY = "second.topic";
 
     Connection connection;
     Channel channel;
@@ -61,8 +59,8 @@ public class Consumer {
         consumer.createChannel();
         consumer.declareExchange();
         consumer.declareQueue();
-        consumer.bindQueue(ROUTING_KEY);
-        consumer.bindQueue(ANOTHER_ROUTING_KEY);
+        consumer.bindQueue("first.topic");
+        consumer.bindQueue("second.topic");
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
         consumer.consumeMessage();
     }

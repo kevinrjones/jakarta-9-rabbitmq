@@ -21,8 +21,8 @@ public class Producer {
 //
 //        producer.createChannel();
 //        producer.declareExchange();
-//        producer.publishMessage("Simple message to '" + ROUTING_KEY + "'", ROUTING_KEY);
-//        producer.publishMessage("Simple message to'" + ANOTHER_ROUTING_KEY + "'", ANOTHER_ROUTING_KEY);
+//        producer.publishMessage("Simple message to 'first.topic'", "first.topic");
+//        producer.publishMessage("Simple message to 'second.topic'", "second.topic");
 //        producer.closeConnection();
     }
 

@@ -70,6 +70,7 @@ public class Consumer {
         consumer.createChannel();
         consumer.declareExchange();
         consumer.declareQueue();
+        consumer.createMessageHeaders();
         consumer.bindQueue();
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
         consumer.consumeMessage();

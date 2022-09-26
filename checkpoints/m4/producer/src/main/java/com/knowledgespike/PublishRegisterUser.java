@@ -14,7 +14,6 @@ public class PublishRegisterUser {
 
     public boolean sendMessage(String message) {
         try {
-            channel.basicPublish("", "user", null, message.getBytes());
         } catch (IOException | TimeoutException e) {
             throw new RuntimeException(e);
         }

@@ -32,7 +32,6 @@ allprojects {
             showStandardStreams = false
             events("passed", "skipped", "failed")
         }
-
     }
 }
 

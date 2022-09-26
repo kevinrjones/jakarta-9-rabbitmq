@@ -13,8 +13,6 @@ repositories {
 version = "0.1-SNAPSHOT"
 
 dependencies {
-    implementation("com.rabbitmq:amqp-client:$rabbitmq_java_version")
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_version}")
     testImplementation("org.assertj:assertj-core:${fluentj_version}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

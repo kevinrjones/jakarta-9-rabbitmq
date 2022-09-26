@@ -3,20 +3,19 @@ package com.knowledgespike;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class PublishRegisterUser {
+public class ConsumeUserRegistration {
 
     private Channel channel;
 
 
-    public PublishRegisterUser(Channel channel) {
+    public ConsumeUserRegistration(Channel channel) {
         this.channel = channel;
     }
 
-    public boolean sendMessage(String message) {
+    public void consumeMessage(DeliverCallback callback) {
         try {
-        } catch (IOException | TimeoutException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return true;
     }
 }

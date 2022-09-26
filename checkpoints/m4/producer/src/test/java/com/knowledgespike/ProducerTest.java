@@ -23,7 +23,7 @@ public class ProducerTest {
 
 }
 
-class TestChannel implements LocalChannel {
+class TestChannel implements Channel {
 
     Boolean wasCalledCorrectly = false;
 

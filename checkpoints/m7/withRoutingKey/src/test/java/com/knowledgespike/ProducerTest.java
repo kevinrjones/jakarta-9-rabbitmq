@@ -10,7 +10,7 @@ public class ProducerTest {
     ConsumeUserRegistrationWithRoutingKey producer;
 
     @Test
-    public void testPublishMessage() throws IllegalAccessException {
+    public void testDeclareExchangeAndQueue() throws IllegalAccessException {
         TestChannel channel = new TestChannel();
 
         ConsumeUserRegistrationWithRoutingKey publishRegisterUser = new ConsumeUserRegistrationWithRoutingKey(channel,

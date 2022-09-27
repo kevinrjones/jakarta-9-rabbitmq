@@ -12,6 +12,7 @@ public class ConsumeUserRegistrationWithRoutingKey {
     public ConsumeUserRegistrationWithRoutingKey(Channel channel, String exchangeName, String queueName, String routingKey) {
 
         try {
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

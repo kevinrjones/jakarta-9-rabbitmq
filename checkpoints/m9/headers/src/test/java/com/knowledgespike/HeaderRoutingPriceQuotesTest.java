@@ -44,13 +44,15 @@ class TestChannel implements Channel {
 
 
         Object value = null;
-        var headers = properties.getHeaders();
-        if (headers != null)
-            value = headers.get("insurance");
+        if (properties != null) {
+            var headers = properties.getHeaders();
+            if (headers != null)
+                value = headers.get("insurance");
 
-        wasCalledCorrectly = wasCalledCorrectly
-                && headers != null
-                && value != null
-                && value.toString().equals("car");
+            wasCalledCorrectly = wasCalledCorrectly
+                    && headers != null
+                    && value != null
+                    && value.toString().equals("car");
+        }
     }
 }
